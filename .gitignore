@@ -1,3 +1,4 @@
 *.txt
 
-dataCSV/
+dataCSV/additionalCSV
+.idea/
