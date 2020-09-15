@@ -49,7 +49,7 @@ HEAD = {
 
 # extract info of property (공급면적, 전용면적, 방향, 해당층, 총층, 방수, 욕실수, 총주차대수, 총세대수, 준공년월)
 def extractInfos(id):
-    result = requests.get(baseURL + str(id),headers=HEAD)
+    result = requests.get(baseURL + str(int(id)),headers=HEAD)
     soup = BeautifulSoup(result.text,"html.parser")
 
     if soup.select_one('.heading_place') == None:
@@ -112,7 +112,7 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
 
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
         print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
-        if idIdx+i == 0:
+        if idIdx+i == 0:    
             h = True
             print('csv파일 헤더 생성 (새파일이 아닐때 이 메시지가 뜨는 경우 csv파일을 확인바람)')
         else:
