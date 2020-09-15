@@ -7,9 +7,10 @@ import re
 import os
 from os.path import dirname
 import time
+from pathlib import Path
 
-rawCsvFileDiv = dirname(os.getcwd()) + '/dataCSV/rawCSV/'
-targetFileDiv = dirname(os.getcwd()) + '/dataCSV/addtionalCSV/'
+rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/'
+targetFileDiv = os.getcwd() + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
     '강동구.csv',
@@ -28,7 +29,11 @@ csvFiles = [
 ]
 
 MIN_SLEEP_TIME = 5
-MAX_SLEEP_TIME = 10
+MAX_SLEEP_TIME = 12
+
+LAST_TASK_FILE = dirname(os.path.realpath(__file__)) + '/lastTask.txt'
+
+URL = f"https://m.land.naver.com/article/info/{id}"
 
 HEAD = {
         'User-Agent': "PostmanRuntime/7.20.0",
@@ -44,7 +49,7 @@ HEAD = {
 
 # extract info of property (공급면적, 전용면적, 방향, 해당층, 총층, 방수, 욕실수, 총주차대수, 총세대수, 준공년월)
 def extractInfos(id):
-    result = requests.get(f"https://m.land.naver.com/article/info/{id}",headers=HEAD)
+    result = requests.get(URL,headers=HEAD)
     soup = BeautifulSoup(result.text,"html.parser")
 
     if soup.select_one('.heading_place') == None:
@@ -63,6 +68,7 @@ def extractInfos(id):
     title = ' '.join(title.replace('\\xa0', ' ').split())
     titleContent['매물명'] = [title]
     titleContent['분류'] = [soup.select_one('.label_detail--category').text]
+    titleContent['매물번호'] = [id]
 
     spec = ['공급/전용면적', '방향', '해당층/총층', '방수/욕실수', '총주차대수', '총세대수', '준공년월']
     infos = soup.select('.col_half')
@@ -80,12 +86,12 @@ def extractInfos(id):
                 titleContent[splitTitle[0]] = [splitContent[0]]
                 titleContent[splitTitle[1]] = [splitContent[1]]
 
-    time.sleep(random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME))
     return titleContent
 
 
-def loadAdditionalInfo(csvFile, fileIdx, idIdx, f):
+def loadAdditionalInfo(csvFile, fileIdx, idIdx):
     targetFileName = csvFile.split('/')[-1]
+
 
     idDF = pd.read_csv(csvFile)
     idList = idDF['atclNo'].values.tolist()
@@ -95,18 +101,27 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx, f):
     else:
         os.remove(targetFileDiv + targetFileName)
 
+    timeRemaining = len(idList) * (MAX_SLEEP_TIME+MIN_SLEEP_TIME)/2
+
+    print('{0:s} 크롤링 시작... ({1:.1f}초 남음)'.format(csvFiles[fileIdx], timeRemaining))
+
     for i, id in enumerate(idList):
+        waitingTime = random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME)
+        time.sleep(waitingTime)
+        timeRemaining -= waitingTime
+
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
-        print(str((i+1)/len(idList)) + '% (' + str((MAX_SLEEP_TIME-MIN_SLEEP_TIME)/2*(len(idList)-1-i)) + '초 남음)')
-        if i == 0:
+        print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
+        if idIdx == 0:
             h = True
         else:
             h = False
+        print(h)
         itemDF.to_csv(targetFileDiv + targetFileName, header = h,index=False, mode='a')
 
-        f.seek(0)
-        f.truncate()
+        f = open(LAST_TASK_FILE, 'w')
         f.write(str(fileIdx) + ' ' + str(i + idIdx))
+        f.close()
 
 def mergeInfos(csvFile):
     propertyDF = pd.read_csv(csvFile)
@@ -114,19 +129,20 @@ def mergeInfos(csvFile):
     propertyDF = propertyDF.rename(columns={'atclNo':'매물번호', 'rletTpCd':'매물형태', 'tradTpCd':'거래방식', 'prc':'가격', 'lat':'위도', 'lng':'경도', 'tagList':'태그'})
 
 
-f = open('lastTask.txt', 'r+')
-lastTask = f.readline().split()
-
 fileIdx = 0
 idIdx = 0
-if len(lastTask) == 2:
-    fileIdx = int(lastTask[0])
-    idIdx = int(lastTask[1])+1
+
+if Path(LAST_TASK_FILE).exists():
+    f = open(LAST_TASK_FILE, 'r')
+    lastTask = f.readline().split()
+    f.close()
+
+    if len(lastTask) == 2:
+        fileIdx = int(lastTask[0])
+        idIdx = int(lastTask[1])+1
 
 csvFiles = csvFiles[fileIdx:]
 
 for file in csvFiles:
     file = rawCsvFileDiv + file
-    loadAdditionalInfo(file, fileIdx, idIdx, f)
-
-f.close()
+    loadAdditionalInfo(file, fileIdx, idIdx)
