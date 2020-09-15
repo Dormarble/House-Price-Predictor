@@ -33,7 +33,7 @@ MAX_SLEEP_TIME = 12
 
 LAST_TASK_FILE = dirname(os.path.realpath(__file__)) + '/lastTask.txt'
 
-URL = f"https://m.land.naver.com/article/info/{id}"
+baseURL = f"https://m.land.naver.com/article/info/"
 
 HEAD = {
         'User-Agent': "PostmanRuntime/7.20.0",
@@ -49,7 +49,7 @@ HEAD = {
 
 # extract info of property (공급면적, 전용면적, 방향, 해당층, 총층, 방수, 욕실수, 총주차대수, 총세대수, 준공년월)
 def extractInfos(id):
-    result = requests.get(URL,headers=HEAD)
+    result = requests.get(baseURL + str(id),headers=HEAD)
     soup = BeautifulSoup(result.text,"html.parser")
 
     if soup.select_one('.heading_place') == None:
@@ -114,9 +114,10 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
         print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
         if idIdx == 0:
             h = True
+            print('csv파일 헤더 생성 (새파일이 아닐때 이 메시지가 뜨는 경우 csv파일을 확인바람)')
         else:
             h = False
-        print(h)
+
         itemDF.to_csv(targetFileDiv + targetFileName, header = h,index=False, mode='a')
 
         f = open(LAST_TASK_FILE, 'w')
