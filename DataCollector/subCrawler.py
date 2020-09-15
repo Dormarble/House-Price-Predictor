@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/'
-targetFileDiv = os.getcwd() + '/dataCSV/addtionalCSV/'
+targetFileDiv = dirname(os.path.realpath(__file__)) + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
     '강동구.csv',
