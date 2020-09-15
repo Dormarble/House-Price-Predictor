@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/'
-targetFileDiv = dirname(os.path.realpath(__file__)) + '/dataCSV/addtionalCSV/'
+targetFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
     '강동구.csv',
@@ -112,7 +112,7 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
 
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
         print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
-        if idIdx == 0:
+        if idIdx+i == 0:
             h = True
             print('csv파일 헤더 생성 (새파일이 아닐때 이 메시지가 뜨는 경우 csv파일을 확인바람)')
         else:
