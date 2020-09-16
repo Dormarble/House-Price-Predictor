@@ -106,7 +106,7 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
         timeRemaining -= waitingTime
 
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
-        print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
+        print('{0:3f}%... ({1:.1f}초 남음)'.format(100*(i+1)/len(idList), timeRemaining))
 
         if idIdx+i == 0:
             h = True
