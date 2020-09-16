@@ -10,22 +10,17 @@ import time
 from pathlib import Path
 
 rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/'
-targetFileDiv = dirname(os.path.realpath(__file__)) + '/dataCSV/addtionalCSV/'
+targetFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
-    '강동구.csv',
-    '강서구.csv',
-    '관악구.csv',
-    '광진구.csv',
-    '구로구.csv',
-    '금천구.csv',
-    '노원구.csv',
-    '도봉구.csv',
-    '동대문구.csv',
-    '동작구.csv',
-    '마포구.csv',
-    '서대문구.csv',
-    '서초구.csv'
+    '중랑구.csv',
+    '중구.csv',
+    '종로구.csv',
+    '은평구.csv',
+    '용산구.csv',
+    '영등포구.csv',
+    '양천구.csv',
+    '송파구.csv'
 ]
 
 MIN_SLEEP_TIME = 5
@@ -49,7 +44,7 @@ HEAD = {
 
 # extract info of property (공급면적, 전용면적, 방향, 해당층, 총층, 방수, 욕실수, 총주차대수, 총세대수, 준공년월)
 def extractInfos(id):
-    result = requests.get(baseURL + str(id),headers=HEAD)
+    result = requests.get(baseURL + str(int(id)),headers=HEAD)
     soup = BeautifulSoup(result.text,"html.parser")
 
     if soup.select_one('.heading_place') == None:
@@ -112,7 +107,8 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
 
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
         print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
-        if idIdx == 0:
+
+        if idIdx+i == 0:
             h = True
             print('csv파일 헤더 생성 (새파일이 아닐때 이 메시지가 뜨는 경우 csv파일을 확인바람)')
         else:
@@ -147,3 +143,4 @@ csvFiles = csvFiles[fileIdx:]
 for file in csvFiles:
     file = rawCsvFileDiv + file
     loadAdditionalInfo(file, fileIdx, idIdx)
+    idIdx = 0 # 한 구가 종료되었으면 idIdx는 초기화
