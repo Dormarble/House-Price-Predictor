@@ -138,9 +138,9 @@ if Path(LAST_TASK_FILE).exists():
         fileIdx = int(lastTask[0])
         idIdx = int(lastTask[1])+1
 
-csvFiles = csvFiles[fileIdx:]
+#csvFiles = csvFiles[fileIdx:]
 
-for file in csvFiles:
-    file = rawCsvFileDiv + file
-    loadAdditionalInfo(file, fileIdx, idIdx)
+for i in range(fileIdx, len(csvFiles)):
+    file = rawCsvFileDiv + csvFiles[i]
+    loadAdditionalInfo(file, i, idIdx)  # 새로운 구로 넘어가면 새로운 구 번호를 넘겨준다.
     idIdx = 0 # 한 구가 종료되었으면 idIdx는 초기화
