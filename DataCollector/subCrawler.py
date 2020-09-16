@@ -13,14 +13,14 @@ rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/
 targetFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
-    '중랑구.csv',
-    '중구.csv',
-    '종로구.csv',
-    '은평구.csv',
-    '용산구.csv',
-    '영등포구.csv',
-    '양천구.csv',
-    '송파구.csv'
+    '도봉구.csv',
+    '동대문구.csv',
+    '동작구.csv',
+    '마포구.csv',
+    '서대문구.csv',
+    '서초구.csv',
+    '성동구.csv',
+    '성북구.csv'
 ]
 
 MIN_SLEEP_TIME = 5
@@ -99,12 +99,11 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
     timeRemaining = len(idList) * (MAX_SLEEP_TIME+MIN_SLEEP_TIME)/2
 
     print('{0:s} 크롤링 시작... ({1:.1f}초 남음)'.format(csvFiles[fileIdx], timeRemaining))
-
     for i, id in enumerate(idList):
+        if np.isnan(id): continue
         waitingTime = random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME)
         time.sleep(waitingTime)
         timeRemaining -= waitingTime
-
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
         print('{0:3f}%... ({1:.1f}초 남음)'.format(100*(i+1)/len(idList), timeRemaining))
 
