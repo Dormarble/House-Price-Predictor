@@ -7,5 +7,6 @@ test.py
 
 node_modules/
 dataFiles/
+
 dataCSV/*
 .idea/

@@ -13,19 +13,14 @@ rawCsvFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/rawCSV/
 targetFileDiv = dirname(dirname(os.path.realpath(__file__))) + '/dataCSV/addtionalCSV/'
 
 csvFiles = [
-    '강동구.csv',
-    '강서구.csv',
-    '관악구.csv',
-    '광진구.csv',
-    '구로구.csv',
-    '금천구.csv',
-    '노원구.csv',
     '도봉구.csv',
     '동대문구.csv',
     '동작구.csv',
     '마포구.csv',
     '서대문구.csv',
-    '서초구.csv'
+    '서초구.csv',
+    '성동구.csv',
+    '성북구.csv'
 ]
 
 MIN_SLEEP_TIME = 5
@@ -104,15 +99,15 @@ def loadAdditionalInfo(csvFile, fileIdx, idIdx):
     timeRemaining = len(idList) * (MAX_SLEEP_TIME+MIN_SLEEP_TIME)/2
 
     print('{0:s} 크롤링 시작... ({1:.1f}초 남음)'.format(csvFiles[fileIdx], timeRemaining))
-
     for i, id in enumerate(idList):
+        if np.isnan(id): continue
         waitingTime = random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME)
         time.sleep(waitingTime)
         timeRemaining -= waitingTime
-
         itemDF = pd.DataFrame.from_dict(extractInfos(id))
-        print('{0:3f}%... ({1:.1f}초 남음)'.format((i+1)/len(idList), timeRemaining))
-        if idIdx+i == 0:    
+        print('{0:3f}%... ({1:.1f}초 남음)'.format(100*(i+1)/len(idList), timeRemaining))
+
+        if idIdx+i == 0:
             h = True
             print('csv파일 헤더 생성 (새파일이 아닐때 이 메시지가 뜨는 경우 csv파일을 확인바람)')
         else:
@@ -142,8 +137,9 @@ if Path(LAST_TASK_FILE).exists():
         fileIdx = int(lastTask[0])
         idIdx = int(lastTask[1])+1
 
-csvFiles = csvFiles[fileIdx:]
+#csvFiles = csvFiles[fileIdx:]
 
-for file in csvFiles:
-    file = rawCsvFileDiv + file
-    loadAdditionalInfo(file, fileIdx, idIdx)
+for i in range(fileIdx, len(csvFiles)):
+    file = rawCsvFileDiv + csvFiles[i]
+    loadAdditionalInfo(file, i, idIdx)  # 새로운 구로 넘어가면 새로운 구 번호를 넘겨준다.
+    idIdx = 0 # 한 구가 종료되었으면 idIdx는 초기화
