@@ -1,4 +1,11 @@
+# test file
+test.py
+
 *.txt
 
-dataCSV/additionalCSV
+*.env
+
+node_modules/
+dataFiles/
+dataCSV/*
 .idea/
