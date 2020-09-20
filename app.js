@@ -1,10 +1,8 @@
 import mysql from 'mysql'
 import dotenv from 'dotenv'
 
-import insertComplex from './dataInjector/insertComplexInfo'
 
 dotenv.config()
-
 
 const dbConfig = {
     host: process.env.DB_URL,
@@ -16,9 +14,16 @@ const dbConfig = {
 
 const connection = mysql.createConnection(dbConfig)
 
-connection.connect()
+console.log("connecting to database...")
+connection.connect(err => {
+    if(err) {
+        console.log(err)
+        process.exit()
+    }
+    console.log("connected to database successfully!")
+})
 
-insertComplex(connection)
 
 
 connection.end()
+
