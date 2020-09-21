@@ -3,7 +3,9 @@ test.py
 
 *.txt
 
-*.env
+test.*
+
+config.json
 
 node_modules/
 dataFiles/
