@@ -2,7 +2,7 @@ export default function(connection, DataTypes) {
     const Pyeong = connection.define('Pyeong', {
         ComplexNo: {
             type: DataTypes.STRING(10),
-            primaryKey: true
+            allowNull: false
         },
         pyeongNo: {
             type: DataTypes.STRING(2),
@@ -45,11 +45,14 @@ export default function(connection, DataTypes) {
         bathroomCnt: DataTypes.INTEGER
     },
     {
-        timestamps: true
+        timestamps: true,
+        underscored: false
     })
 
     Pyeong.associate = models => {
-        Pyeong.belongsTo(models.Complex, {foreignKey: 'ComplexNo', sourceKey: 'ComplexNo'})
+        Pyeong.belongsTo(models.Complex, {
+            foreignKey: 'ComplexNo'
+        })
     }
 
     return Pyeong

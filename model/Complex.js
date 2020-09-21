@@ -70,15 +70,15 @@ export default function(connection, DataTypes) {
             },
         },
         {
-            timestamps: true
+            timestamps: true,
+            underscored: false
         }
     )
 
     Complex.associate = models => {
         Complex.hasMany(models.Pyeong, {
             foreignKey: 'ComplexNo', 
-            sourceKey: 'ComplexNo',
-            delete: 'cascade'
+            onDelete: 'cascade'
         })
     }
 
