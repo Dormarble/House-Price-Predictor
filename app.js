@@ -1,29 +1,11 @@
-import mysql from 'mysql'
-import dotenv from 'dotenv'
+import config from './config'
+import db, { connectDB } from './connection'
+import { Complex } from './model/Complex'
+import { Pyeong } from './model/Pyeong'
 
+connectDB(config.development)
+const connection = db.conn
 
-dotenv.config()
-
-const dbConfig = {
-    host: process.env.DB_URL,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PWD,
-    database: process.env.DB_NAME
-}
-
-const connection = mysql.createConnection(dbConfig)
-
-console.log("connecting to database...")
-connection.connect(err => {
-    if(err) {
-        console.log(err)
-        process.exit()
-    }
-    console.log("connected to database successfully!")
-})
-
-
-
-connection.end()
-
+// force: true 서버실행 시마다 테이블을 재생성
+connection.sync({force: false})
+.then(() => console.log("connect database successfully"))
