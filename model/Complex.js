@@ -40,10 +40,7 @@ export default function(connection, DataTypes) {
             etcLeaseHouseholdCount: DataTypes.INTEGER,
             highFloor: DataTypes.INTEGER,
             lowFloor: DataTypes.INTEGER,
-            completionYearMonth: {
-                type: DataTypes.STRING(6),
-                allowNull: false
-            },
+            completionYearMonth: DataTypes.STRING(6),
             totalDongCount: DataTypes.INTEGER,
             maxSupplyArea: DataTypes.FLOAT,
             minSupplyArea: DataTypes.FLOAT,
@@ -52,8 +49,8 @@ export default function(connection, DataTypes) {
             leaseCount: DataTypes.INTEGER,
             shortTermRentCount: DataTypes.INTEGER,
             isBookmarked: DataTypes.BOOLEAN,
-            batlRatio: DataTypes.STRING(10),
-            btlRatio: DataTypes.STRING(10),
+            batlRatio: DataTypes.INTEGER,
+            btlRatio: DataTypes.INTEGER,
             parkingCountByHousehold: DataTypes.FLOAT,
             constructionCompanyName: DataTypes.STRING(40),
             heatMethodTypeCode: DataTypes.STRING(20),
@@ -77,7 +74,7 @@ export default function(connection, DataTypes) {
 
     Complex.associate = models => {
         Complex.hasMany(models.Pyeong, {
-            foreignKey: 'ComplexNo', 
+            foreignKey: 'complexNo', 
             onDelete: 'cascade'
         })
     }

@@ -1,6 +1,6 @@
 export default function(connection, DataTypes) {
     const Pyeong = connection.define('Pyeong', {
-        ComplexNo: {
+        complexNo: {
             type: DataTypes.STRING(10),
             allowNull: false
         },
@@ -25,12 +25,12 @@ export default function(connection, DataTypes) {
             type: DataTypes.STRING(5),
             allowNull: false
         },
-        exclusiveRate: DataTypes.INTEGER,
+        exclusiveRate: DataTypes.FLOAT,
         entranceType: DataTypes.STRING(10),
 
         //landPriceMaxByPtp
-        minPrice: DataTypes.INTEGER,
-        maxPrice: DataTypes.INTEGER,
+        minPrice: DataTypes.BIGINT,
+        maxPrice: DataTypes.BIGINT,
 
         //landPriceMaxByPtp.landPriceTax
         propertyTotalTax: DataTypes.INTEGER,
@@ -51,7 +51,7 @@ export default function(connection, DataTypes) {
 
     Pyeong.associate = models => {
         Pyeong.belongsTo(models.Complex, {
-            foreignKey: 'ComplexNo'
+            foreignKey: 'complexNo'
         })
     }
 

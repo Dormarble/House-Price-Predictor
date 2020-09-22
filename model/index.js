@@ -13,7 +13,8 @@ const connection = new Sequelize(
     dbConfig.dbPwd, 
     {
         host: dbConfig.dbHost,
-        dialect: dbConfig.dbEngine
+        dialect: dbConfig.dbEngine,
+        logging: false
     }
 )
 db.conn = connection
