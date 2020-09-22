@@ -56,7 +56,6 @@ export default function(connection, DataTypes) {
             heatMethodTypeCode: DataTypes.STRING(20),
             heatFuelTypeCode: DataTypes.STRING(20),
             pyoengNames: DataTypes.STRING(50),
-            //buildingRegister: DataTypes.STRING(10),
             address: {
                 type: DataTypes.STRING(50),
                 allowNull: true
