@@ -15,12 +15,14 @@ db.conn.sync({force: false})        // force: true 서버실행 시마다 테이
 .then(() => {
     console.log("connect database successfully")
     app.listen(PORT, () => console.log("express is running"))
+
+    db.Complex.findAndCountAll().then(data => {
+        console.log('Complex: ' + data.count)
+    })
+    db.Pyeong.findAndCountAll().then(data => {
+        console.log('Pyeong: ' + data.count)
+    })
+
 })
 .catch(err => {console.log("failed to connect database"); console.log(err)})
 
-db.Complex.findAndCountAll().then(data => {
-    console.log('Complex: ' + data.count)
-})
-db.Pyeong.findAndCountAll().then(data => {
-    console.log('Pyeong: ' + data.count)
-})
