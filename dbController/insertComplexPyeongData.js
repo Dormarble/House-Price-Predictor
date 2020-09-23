@@ -22,7 +22,7 @@ export function insertComplexPyeongFromJSON() {
             console.log(err)
             process.exit()
         })
-    });
+    })
 }
 
 async function storeJSONdata({complexPyeongDetailList, complexDetail}) {
@@ -54,7 +54,8 @@ async function storeComplex(complexDetail) {
         etcLeaseHouseholdCount: complexDetail.etcLeaseHouseholdCount,
         highFloor: complexDetail.highFloor,
         lowFloor: complexDetail.lowFloor,
-        completionYearMonth: complexDetail.completionYearMonth,
+        completionYear: complexDetail.completionYearMonth ? complexDetail.completionYearMonth.slice(0, 4) : null,
+        completionMonth: complexDetail.completionYearMonth ? complexDetail.completionYearMonth.slice(4) : null,
         totalDongCount: complexDetail.totalDongCount,
         maxSupplyArea: complexDetail.maxSupplyArea,
         minSupplyArea: complexDetail.minSupplyArea,
