@@ -1,29 +1,26 @@
-import mysql from 'mysql'
-import dotenv from 'dotenv'
+import express from 'express'
+import cors from 'cors'
 
+import db from './model'
+import config from './config'
 
-dotenv.config()
+const PORT = config.development.port || 3000
 
-const dbConfig = {
-    host: process.env.DB_URL,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PWD,
-    database: process.env.DB_NAME
-}
+const app = express()
 
-const connection = mysql.createConnection(dbConfig)
+app.use(cors())
+app.use(express.urlencoded({extended: true}))
 
-console.log("connecting to database...")
-connection.connect(err => {
-    if(err) {
-        console.log(err)
-        process.exit()
-    }
-    console.log("connected to database successfully!")
+db.conn.sync({force: false})        // force: true 서버실행 시마다 테이블을 재생성
+.then(() => {
+    console.log("connect database successfully")
+    app.listen(PORT, () => console.log("express is running"))
 })
+.catch(err => {console.log("failed to connect database"); console.log(err)})
 
-
-
-connection.end()
-
+db.Complex.findAndCountAll().then(data => {
+    console.log('Complex: ' + data.count)
+})
+db.Pyeong.findAndCountAll().then(data => {
+    console.log('Pyeong: ' + data.count)
+})
