@@ -40,7 +40,8 @@ export default function(connection, DataTypes) {
             etcLeaseHouseholdCount: DataTypes.INTEGER,
             highFloor: DataTypes.INTEGER,
             lowFloor: DataTypes.INTEGER,
-            completionYearMonth: DataTypes.STRING(6),
+            completionYear: DataTypes.STRING(4),
+            completionMonth: DataTypes.STRING(2),
             totalDongCount: DataTypes.INTEGER,
             maxSupplyArea: DataTypes.FLOAT,
             minSupplyArea: DataTypes.FLOAT,
@@ -80,6 +81,3 @@ export default function(connection, DataTypes) {
 
     return Complex
 }
-
-
-
