@@ -53,7 +53,7 @@ async function storeTradeData(tradeData) {
         complexName: tradeData['단지명'],
         supplyArea: parseFloat(tradeData['전용면적(㎡)']),
         contactDate: new Date(contactDateStr) ,
-        price: parseInt(tradeData['거래금액(만원)']),
+        price: parseInt(tradeData['거래금액(만원)'].replace(',', '')) * 10000,
         floor: parseInt(tradeData['층']),
         constructYear: parseInt(tradeData['건축년도']),
         roadAddress: tradeData['도로명']
