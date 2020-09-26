@@ -23,11 +23,11 @@ export default function(connection, DataTypes) {
             detailAddress: DataTypes.STRING(50),
             roadAddress: DataTypes.STRING(50),
             latitude: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.DOUBLE,
                 allowNull: false
             },
             longitude: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.DOUBLE,
                 allowNull: false
             },
             totalHouseholdCount: DataTypes.INTEGER,
